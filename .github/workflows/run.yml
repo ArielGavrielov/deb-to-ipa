@@ -48,4 +48,5 @@ jobs:
         run: |
           git add ${{ github.workspace }}/IPAs
           git commit -m "Add App.ipa"
-          git push
+          git remote set-url origin "https://github.com/ArielGavrielov/dep-to-ipa.git"
+          git push -u origin main
