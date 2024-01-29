@@ -51,4 +51,4 @@ jobs:
 
       - name: Push using Personal Access Token (PAT)
         run: |
-          git push -u origin main -o "PersonalAccessToken=${{ secrets.GH_PAT }}"
+          git push -u origin main -o "PersonalAccessToken=${{ secrets.GITHUB_TOKEN }}"
