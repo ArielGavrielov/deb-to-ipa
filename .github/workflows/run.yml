@@ -1,0 +1,51 @@
+name: Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      deb:
+        description: "Direct URL to deb file"
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git identity
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+
+      - name: Download deb file
+        run: |
+          curl -L -o ${{ github.workspace }}/app.deb "${{ github.event.inputs.deb }}"
+
+      - name: Convert deb to IPA
+        run: |
+          dpkg-deb -X ${{ github.workspace }}/app.deb ${{ github.workspace }}/app
+          cd ${{ github.workspace }}/app/Applications
+          zip -r ${{ github.workspace }}/App.ipa .
+
+      - name: Move IPA file to IPAs folder
+        run: |
+          mkdir -p ${{ github.workspace }}/IPAs
+          mv ${{ github.workspace }}/App.ipa ${{ github.workspace }}/IPAs
+
+      - name: Install Git LFS
+        run: |
+          sudo apt-get install git-lfs
+
+      - name: Track IPA file with Git LFS
+        run: |
+          git lfs install
+          git lfs track 'IPAs/*'
+
+      - name: Commit and push IPA file using Git LFS
+        run: |
+          git add ${{ github.workspace }}/IPAs
+          git commit -m "Add App.ipa"
+          git push
