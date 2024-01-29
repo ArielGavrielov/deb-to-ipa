@@ -44,9 +44,12 @@ jobs:
           git lfs install
           git lfs track 'IPAs/*'
 
-      - name: Commit and push IPA file using Personal Access Token (PAT)
+      - name: Commit using GITHUB_TOKEN
         run: |
           git add ${{ github.workspace }}/IPAs
           git commit -m "Add App.ipa"
+
+      - name: Push using Personal Access Token (PAT)
+        run: |
           git remote set-url origin "https://github.com/ArielGavrielov/deb-to-ipa.git"
           git push -u origin main -o "PersonalAccessToken=${{ secrets.GH_PAT }}"
