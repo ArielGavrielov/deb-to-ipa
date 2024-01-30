@@ -41,7 +41,7 @@ jobs:
 
       - name: Edit README file with download link
         run: |
-          echo "Download the IPA file [here](https://github.com/ArielGavrielov/deb-to-ipa/blob/main/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa)" >> ${{ github.workspace }}/IPAs/README.md
+          echo "Download the IPA file [here](https://github.com/ArielGavrielov/deb-to-ipa/raw/main/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa?download=)" >> ${{ github.workspace }}/README.md
 
       - name: Exclude README file from Git LFS
         run: |
