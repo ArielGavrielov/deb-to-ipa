@@ -58,7 +58,7 @@ jobs:
 
       - name: Commit and push changes using GITHUB_TOKEN
         run: |
-          git add ${{ github.workspace }}/.gitattributes ${{ github.workspace }}/IPAs
+          git add ${{ github.workspace }}/README.md ${{ github.workspace }}/.gitattributes ${{ github.workspace }}/IPAs
           git commit -m "Add ${{ steps.deb_filename.outputs.filename }}.ipa and update README"
           git push -u origin main
 
