@@ -1,2 +1,9 @@
-- name: Print Git Remotes
-  run: git remote -v
+name: Run
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Git Remotes
+        run: git remote -v
