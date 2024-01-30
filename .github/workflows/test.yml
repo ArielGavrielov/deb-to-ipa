@@ -9,4 +9,6 @@ jobs:
 
     steps:
       - name: Print Git Remotes
-        run: git remote -v
+        run: |
+          git remote set-url origin https://ArielGavrielov:${{secrets.GH_PAT}}@github.com/ArielGavrielov/deb-to-ipa.git
+          git remote -v
