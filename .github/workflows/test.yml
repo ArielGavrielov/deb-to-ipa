@@ -1,0 +1,29 @@
+name: Clear lfs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Git identity
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+
+      - name: Untrack LFS files
+        run: |
+          while read -r oid; do
+          git lfs untrack "$oid"
+          done < lfs_files.txt
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Untrack all files from Git LFS"
