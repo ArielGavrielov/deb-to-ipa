@@ -36,7 +36,8 @@ jobs:
 
       - name: IPA Zip
         run: |
-          zip -r -f ${{ github.workspace }}/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa ${{ github.workspace }}/app/Applications
+          cd ${{ github.workspace }}/app/Applications
+          zip -r ${{ github.workspace }}/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa .
 
       - name: Edit README file with download link
         run: |
