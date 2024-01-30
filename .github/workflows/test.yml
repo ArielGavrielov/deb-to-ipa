@@ -19,6 +19,7 @@ jobs:
 
       - name: Untrack LFS files
         run: |
+          git lfs install
           while read -r oid; do
           git lfs untrack "$oid"
           done < lfs_files.txt
