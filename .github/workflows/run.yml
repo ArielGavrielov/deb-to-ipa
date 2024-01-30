@@ -43,7 +43,7 @@ jobs:
 
       - name: Edit README file with download link
         run: |
-          echo "Download the IPA file [here](IPAs/${{ steps.deb_filename.outputs.filename }}.ipa)" >> ${{ github.workspace }}/IPAs/README.md
+          echo "Download the IPA file [here](https://github.com/ArielGavrielov/deb-to-ipa/blob/main/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa)" >> ${{ github.workspace }}/IPAs/README.md
 
       - name: Install Git LFS
         run: |
@@ -60,6 +60,6 @@ jobs:
           git commit -m "Add ${{ steps.deb_filename.outputs.filename }}.ipa and update README"
           git push -u origin main
 
-      - name: Set action summary
+      - name: Set action summary with full URL
         run: |
           echo "::set-output name=summary::Download the IPA file [here](https://github.com/ArielGavrielov/deb-to-ipa/blob/main/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa)"
