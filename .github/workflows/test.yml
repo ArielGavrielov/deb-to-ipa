@@ -1,0 +1,2 @@
+- name: Print Git Remotes
+  run: git remote -v
