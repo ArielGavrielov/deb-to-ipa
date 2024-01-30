@@ -28,7 +28,7 @@ jobs:
       - name: Extract deb file name (without extension)
         id: deb_filename
         run: |
-          echo "::set-output name=filename::$(basename "$(echo "${{ github.event.inputs.deb }}" | sed 's/^.*\///')" .deb)"
+          echo "::set-output name=filename::$(basename "$(echo "${{ github.event.inputs.deb }}" | sed 's/^.*\///' | sed 's/\?.*//')" .deb)"
 
       - name: Convert deb to IPA
         run: |
