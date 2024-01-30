@@ -22,7 +22,7 @@ jobs:
           git lfs install
           while read -r oid; do
           git lfs untrack "$oid"
-          done < lfs_files.txt
+          done
 
       - name: Commit changes
         run: |
