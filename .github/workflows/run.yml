@@ -28,18 +28,13 @@ jobs:
       - name: Extract deb file name (without extension)
         id: deb_filename
         run: |
-          echo "::set-output name=filename::$(basename ${{ github.workspace }}/app.deb .deb)"
+          echo "::set-output name=filename::$(basename "$(echo "${{ github.event.inputs.deb }}" | sed 's/^.*\///')" .deb)"
 
       - name: Convert deb to IPA
         run: |
           dpkg-deb -X ${{ github.workspace }}/app.deb ${{ github.workspace }}/app
           cd ${{ github.workspace }}/app/Applications
-          zip -r ${{ github.workspace }}/${{ steps.deb_filename.outputs.filename }}.ipa .
-
-      - name: Move IPA file to IPAs folder
-        run: |
-          mkdir -p ${{ github.workspace }}/IPAs
-          mv ${{ github.workspace }}/${{ steps.deb_filename.outputs.filename }}.ipa ${{ github.workspace }}/IPAs
+          zip -r ${{ github.workspace }}/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa .
 
       - name: Edit README file with download link
         run: |
