@@ -1,4 +1,4 @@
-name: Run
+name: Save IPA
 
 on:
   workflow_dispatch:
@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
 
       - name: Set up Git identity
         run: |
@@ -24,32 +25,41 @@ jobs:
         run: |
           curl -L -o ${{ github.workspace }}/app.deb "${{ github.event.inputs.deb }}"
 
+      - name: Extract deb file name (without extension)
+        id: deb_filename
+        run: |
+          echo "::set-output name=filename::$(basename ${{ github.workspace }}/app.deb .deb)"
+
       - name: Convert deb to IPA
         run: |
           dpkg-deb -X ${{ github.workspace }}/app.deb ${{ github.workspace }}/app
           cd ${{ github.workspace }}/app/Applications
-          zip -r ${{ github.workspace }}/App.ipa .
+          zip -r ${{ github.workspace }}/${{ steps.deb_filename.outputs.filename }}.ipa .
 
       - name: Move IPA file to IPAs folder
         run: |
           mkdir -p ${{ github.workspace }}/IPAs
-          mv ${{ github.workspace }}/App.ipa ${{ github.workspace }}/IPAs
+          mv ${{ github.workspace }}/${{ steps.deb_filename.outputs.filename }}.ipa ${{ github.workspace }}/IPAs
+
+      - name: Edit README file with download link
+        run: |
+          echo "Download the IPA file [here](IPAs/${{ steps.deb_filename.outputs.filename }}.ipa)" >> ${{ github.workspace }}/IPAs/README.md
 
       - name: Install Git LFS
         run: |
           sudo apt-get install git-lfs
 
-      - name: Track IPA file with Git LFS
+      - name: Track IPA file and README with Git LFS
         run: |
           git lfs install
           git lfs track 'IPAs/*'
 
-      - name: Commit using GITHUB_TOKEN
+      - name: Commit and push changes using GITHUB_TOKEN
         run: |
           git add ${{ github.workspace }}/IPAs
-          git commit -m "Add App.ipa"
+          git commit -m "Add ${{ steps.deb_filename.outputs.filename }}.ipa and update README"
+          git push -u origin main
 
-      - name: Push using Personal Access Token (PAT)
+      - name: Set action summary
         run: |
-          git remote set-url origin https://ArielGavrielov:${{secrets.GH_PAT}}@github.com/ArielGavrielov/deb-to-ipa.git
-          git push -u origin main -o "PersonalAccessToken=${{ secrets.GH_PAT }}"
+          echo "::set-output name=summary::Download the IPA file [here](https://github.com/ArielGavrielov/deb-to-ipa/blob/main/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa)"
