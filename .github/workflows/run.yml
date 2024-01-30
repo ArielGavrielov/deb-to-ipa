@@ -30,9 +30,12 @@ jobs:
         run: |
           echo "::set-output name=filename::$(basename "$(echo "${{ github.event.inputs.deb }}" | sed 's/^.*\///' | sed 's/\?.*//')" .deb)"
 
-      - name: Convert deb to IPA
+      - name: Unzip Deb file
         run: |
           dpkg-deb -X ${{ github.workspace }}/app.deb ${{ github.workspace }}/app
+
+      - name: IPA Zip
+        run: |
           cd ${{ github.workspace }}/app/Applications
           zip -r ${{ github.workspace }}/IPAs/${{ steps.deb_filename.outputs.filename }}.ipa .
 
